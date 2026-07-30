@@ -7,7 +7,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
-<script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
   /* ============================================================
      CONFIGURAÇÃO — edite estas duas linhas
@@ -18,15 +17,14 @@
 
 <script>
   // ============================================================
-  // CONFIGURAÇÃO — edite estas duas constantes antes de publicar
+  // CONFIGURAÇÃO — edite antes de publicar
   // ============================================================
-  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxMPcvLrBtLbSfUJAUOGoJffwnM2hxgUE1vioGEKHLxFBTgpbO8tL_UZKLHch_jUcUr/exec'; // ex: https://script.google.com/macros/s/AKfycb.../exec
-  const GOOGLE_CLIENT_ID = 'COLE_AQUI_SEU_CLIENT_ID.apps.googleusercontent.com';
+  const SCRIPT_URL = 'https://script.googleusercontent.com/macros/echo?user_content_key=AUkAhnREHAeSw9B9XdN3Bd5_9ADYmKGVMJx8451eH3vT7oUQ3ZiIKUUBCXQFHd0PdowKiAmCzA8dwP3pHoFQI6YIfzLn_LSNshwyxx4Sr3hN_WaJIyRlmMIxfhZrg5El_7pKmk8P5FoN84l2PcGEbs6YwanTrO3WZO0FSVjzm2MBfxrCAkim6PyuTdkNB4v0GYV_ClPIcUQMjjjxscjGuv9qXbktCMNDt9VVFNQCWK3G3dSTMTD9o1Qhn4syuXImAP8bdLelR9SxwiEBbLdwrgnkgI3rwskiRQ&lib=MbKoDC7_YSaJtP6zgNvf5I2nsvEBa-wt6'; // ex: https://script.google.com/macros/s/AKfycb.../exec
 
   // Chave Pix, nome e cidade do recebedor (aparecem no QR Code gerado).
   // Se PIX_KEY ficar como está, o botão "fazer pix" não aparece nos itens.
   const PIX_KEY = '07439151518';   // CPF, celular, e-mail ou chave aleatória
-  const PIX_NOME = 'Marcos Emanuel Moreira';         // até 25 caracteres, sem acento
+  const PIX_NOME = 'Marcos Moreira';         // até 25 caracteres, sem acento
   const PIX_CIDADE = 'Simoes Filho';              // até 15 caracteres, sem acento
 </script>
 
@@ -126,8 +124,19 @@
     font-size: 14px;
   }
 
-  .user-chip img{
-    width: 28px; height: 28px; border-radius: 50%;
+  .user-icon{
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: var(--pine);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .user-icon svg{
+    width: 16px; height: 16px;
   }
 
   .user-chip.visible{ display: flex; }
@@ -563,17 +572,18 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 3 9v13h6v-7h6v7h6V9z"/></svg>
       lista de casa nova
     </div>
-    <h1>Nossa Casa Nova ♥ Mari & Marcos</h1>
-    <p>Escolha algo da lista abaixo para nos presentear. Assim que você reserva um item, ele sera reservado, escolha comprar online, ou apenas fazer o pix no valor sugerido..</p>
+    <h1>Nossa Casa Nova ♥ Mari &amp; Marcos</h1>
+    <p>Escolha algo da lista abaixo para nos presentear. Assim que você reserva um item, ele sera reservado, escolha comprar online, ou apenas fazer o pix no valor sugerido.</p>
   </div>
 
   <div class="auth-box">
-    <div id="g_id_signin"></div>
     <div class="user-chip" id="userChip">
-      <img id="userPhoto" src="" alt="">
+      <span class="user-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>
+      </span>
       <span id="userName"></span>
     </div>
-    <div class="manual-login" id="manualLogin">
+    <div class="manual-login visible" id="manualLogin">
       <small>Entre com seu nome e e-mail para reservar itens:</small>
       <input type="text" id="manualName" placeholder="Seu nome" />
       <input type="email" id="manualEmail" placeholder="Seu e-mail" />
@@ -628,57 +638,21 @@
   }
 
   // ============================================================
-  // LOGIN COM GOOGLE
+  // LOGIN (nome e e-mail)
   // ============================================================
-  function parseJwt(token){
-    const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
-    return JSON.parse(decodeURIComponent(atob(base64).split('').map(c =>
-      '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
-    ).join('')));
-  }
-
-  function handleCredentialResponse(response){
-    const payload = parseJwt(response.credential);
-    setUser({ name: payload.name, email: payload.email, picture: payload.picture });
-  }
-
   function setUser(user){
     currentUser = user;
     const chip = document.getElementById('userChip');
-    document.getElementById('userPhoto').src = user.picture || '';
     document.getElementById('userName').textContent = user.name;
     chip.classList.add('visible');
-    document.getElementById('g_id_signin').style.display = 'none';
     document.getElementById('manualLogin').classList.remove('visible');
   }
-
-  const clientIdConfigured = GOOGLE_CLIENT_ID && !GOOGLE_CLIENT_ID.startsWith('COLE_AQUI');
-
-  window.addEventListener('load', () => {
-    if (clientIdConfigured && window.google && window.google.accounts){
-      google.accounts.id.initialize({
-        client_id: GOOGLE_CLIENT_ID,
-        callback: handleCredentialResponse
-      });
-      google.accounts.id.renderButton(
-        document.getElementById('g_id_signin'),
-        { theme: 'outline', size: 'medium', shape: 'pill' }
-      );
-    } else {
-      // sem client id configurado (ou falha ao carregar) -> login manual
-      document.getElementById('g_id_signin').style.display = 'none';
-      document.getElementById('manualLogin').classList.add('visible');
-      if (!clientIdConfigured){
-        showBanner('Login com Google não configurado ainda — usando entrada manual de nome/e-mail. Veja o guia de configuração para ativar o login com Google.');
-      }
-    }
-  });
 
   document.getElementById('manualLoginBtn').addEventListener('click', () => {
     const name = document.getElementById('manualName').value.trim();
     const email = document.getElementById('manualEmail').value.trim();
     if (!name || !email){ alert('Preencha nome e e-mail.'); return; }
-    setUser({ name, email, picture: '' });
+    setUser({ name, email });
   });
 
   // ============================================================
@@ -780,7 +754,7 @@
   // Clique em "Presentear este item"
   async function onClickPresentear(item, card){
     if (!currentUser){
-      showBanner('Entre com seu nome/e-mail (ou com o Google) antes de reservar um item.');
+      showBanner('Entre com seu nome e e-mail antes de reservar um item.');
       window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
@@ -811,7 +785,7 @@
   // o pagamento) e em seguida abre o QR Code.
   async function onClickFazerPix(item, card){
     if (!currentUser){
-      showBanner('Entre com seu nome/e-mail (ou com o Google) antes de reservar um item.');
+      showBanner('Entre com seu nome e e-mail antes de reservar um item.');
       window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
