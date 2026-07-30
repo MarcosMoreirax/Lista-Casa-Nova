@@ -19,13 +19,13 @@
   // ============================================================
   // CONFIGURAÇÃO — edite antes de publicar
   // ============================================================
-  const SCRIPT_URL = 'https://script.googleusercontent.com/macros/echo?user_content_key=AUkAhnREHAeSw9B9XdN3Bd5_9ADYmKGVMJx8451eH3vT7oUQ3ZiIKUUBCXQFHd0PdowKiAmCzA8dwP3pHoFQI6YIfzLn_LSNshwyxx4Sr3hN_WaJIyRlmMIxfhZrg5El_7pKmk8P5FoN84l2PcGEbs6YwanTrO3WZO0FSVjzm2MBfxrCAkim6PyuTdkNB4v0GYV_ClPIcUQMjjjxscjGuv9qXbktCMNDt9VVFNQCWK3G3dSTMTD9o1Qhn4syuXImAP8bdLelR9SxwiEBbLdwrgnkgI3rwskiRQ&lib=MbKoDC7_YSaJtP6zgNvf5I2nsvEBa-wt6'; // ex: https://script.google.com/macros/s/AKfycb.../exec
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxMPcvLrBtLbSfUJAUOGoJffwnM2hxgUE1vioGEKHLxFBTgpbO8tL_UZKLHch_jUcUr/exec';
 
   // Chave Pix, nome e cidade do recebedor (aparecem no QR Code gerado).
   // Se PIX_KEY ficar como está, o botão "fazer pix" não aparece nos itens.
-  const PIX_KEY = '07439151518';   // CPF, celular, e-mail ou chave aleatória
-  const PIX_NOME = 'Marcos Moreira';         // até 25 caracteres, sem acento
-  const PIX_CIDADE = 'Simoes Filho';              // até 15 caracteres, sem acento
+  const PIX_KEY = '07439151518';
+  const PIX_NOME = 'Marcos Emanuel Moreira';
+  const PIX_CIDADE = 'Simoes Filho';
 </script>
 
 <style>
@@ -316,11 +316,15 @@
 
   .card img.thumb{
     width: 100%;
-    height: 150px;
-    object-fit: cover;
+    aspect-ratio: 1 / 1;
+    height: auto;
+    object-fit: contain;
+    object-position: center;
     border-radius: 8px;
     background: var(--paper-2);
     border: 1px solid var(--line);
+    padding: 10px;
+    box-sizing: border-box;
   }
 
   .card h3{
@@ -573,7 +577,7 @@
       lista de casa nova
     </div>
     <h1>Nossa Casa Nova ♥ Mari &amp; Marcos</h1>
-    <p>Escolha algo da lista abaixo para nos presentear. Assim que você reserva um item, ele sera reservado, escolha comprar online, ou apenas fazer o pix no valor sugerido.</p>
+    <p>Escolha algo da lista abaixo para nos presentear. Assim que você reserva um item, ele sera reservado, escolha comprar online, ou apenas fazer o pix no valor sugerido..</p>
   </div>
 
   <div class="auth-box">
