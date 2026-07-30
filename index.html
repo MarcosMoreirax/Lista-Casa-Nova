@@ -20,8 +20,14 @@
   // ============================================================
   // CONFIGURAÇÃO — edite estas duas constantes antes de publicar
   // ============================================================
-  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzr304PoZCVbhicDGSlwI4zd5EPZhB27oGQDmyswp965tZXlbN54_s8I7OXIq_R2w77/exec'; // ex: https://script.google.com/macros/s/AKfycb.../exec
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxMPcvLrBtLbSfUJAUOGoJffwnM2hxgUE1vioGEKHLxFBTgpbO8tL_UZKLHch_jUcUr/exec'; // ex: https://script.google.com/macros/s/AKfycb.../exec
   const GOOGLE_CLIENT_ID = 'COLE_AQUI_SEU_CLIENT_ID.apps.googleusercontent.com';
+
+  // Chave Pix, nome e cidade do recebedor (aparecem no QR Code gerado).
+  // Se PIX_KEY ficar como está, o botão "fazer pix" não aparece nos itens.
+  const PIX_KEY = '07439151518';   // CPF, celular, e-mail ou chave aleatória
+  const PIX_NOME = 'Marcos Emanuel Moreira';         // até 25 caracteres, sem acento
+  const PIX_CIDADE = 'Simoes Filho';              // até 15 caracteres, sem acento
 </script>
 
 <style>
@@ -261,6 +267,35 @@
     opacity: 0;
   }
 
+  .card.reservado{
+    background: var(--paper-2);
+    border-color: var(--rose);
+  }
+
+  .card.reservado img.thumb{
+    filter: grayscale(40%) brightness(0.94);
+  }
+
+  .card.reservado h3,
+  .card.reservado p.desc,
+  .card.reservado .price{
+    opacity: 0.55;
+  }
+
+  .card.reservado .row-links{
+    opacity: 0.45;
+    pointer-events: none;
+  }
+
+  .card.reservado .gift-btn{
+    background: var(--ink-soft);
+    cursor: not-allowed;
+  }
+
+  .card.reservado .gift-btn:hover{
+    background: var(--ink-soft);
+  }
+
   .card-cat{
     font-family: var(--font-mono);
     font-size: 10.5px;
@@ -314,6 +349,127 @@
     text-underline-offset: 2px;
   }
 
+  .row-links{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+
+  .pix-link{
+    font-family: inherit;
+    font-size: 12.5px;
+    color: var(--ochre);
+    background: none;
+    border: none;
+    padding: 0;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    cursor: pointer;
+  }
+
+  /* ---------- modal do pix ---------- */
+  .pix-modal-overlay{
+    position: fixed;
+    inset: 0;
+    background: rgba(38,35,29,0.55);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 60;
+  }
+
+  .pix-modal-overlay.visible{ display: flex; }
+
+  .pix-modal{
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 28px 24px 22px;
+    max-width: 340px;
+    width: 100%;
+    text-align: center;
+    position: relative;
+  }
+
+  .pix-modal-close{
+    position: absolute;
+    top: 8px; right: 12px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    line-height: 1;
+    color: var(--ink-soft);
+    cursor: pointer;
+    padding: 6px;
+  }
+
+  .pix-modal h3{
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0 0 4px;
+  }
+
+  .pix-modal-item{
+    font-size: 13px;
+    color: var(--ink-soft);
+    margin: 0 0 16px;
+  }
+
+  .pix-qr{
+    width: 200px;
+    height: 200px;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+    margin-bottom: 16px;
+    background: #fff;
+  }
+
+  .pix-key-box{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 9px 10px;
+    margin-bottom: 14px;
+  }
+
+  .pix-key-box span{
+    flex-grow: 1;
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    text-align: left;
+    word-break: break-all;
+    color: var(--ink);
+  }
+
+  .pix-key-box button{
+    background: var(--pine);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 7px 10px;
+    font-size: 12px;
+    font-family: var(--font-body);
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .pix-key-box button:hover{ background: var(--pine-dark); }
+
+  .pix-modal-note{
+    font-size: 11.5px;
+    color: var(--ink-soft);
+    margin: 0;
+    line-height: 1.5;
+  }
+
   .gift-btn{
     margin-top: 6px;
     width: 100%;
@@ -353,6 +509,15 @@
   .card.stamping .stamp{
     opacity: 1;
     transition: opacity .15s ease;
+  }
+
+  .card.reservado .stamp{
+    opacity: 1;
+  }
+
+  .card.reservado:not(.stamping) .stamp span{
+    opacity: 1;
+    transform: rotate(-8deg) scale(1);
   }
 
   .stamp span{
@@ -428,6 +593,20 @@
   </div>
   <div class="grid" id="grid"></div>
 </main>
+
+<div class="pix-modal-overlay" id="pixModalOverlay">
+  <div class="pix-modal">
+    <button class="pix-modal-close" id="pixModalClose" aria-label="Fechar">×</button>
+    <h3>Pagar com Pix</h3>
+    <p class="pix-modal-item" id="pixModalItem"></p>
+    <img class="pix-qr" id="pixModalQr" alt="QR Code Pix" />
+    <div class="pix-key-box">
+      <span id="pixModalKey"></span>
+      <button type="button" id="pixModalCopy">copiar chave</button>
+    </div>
+    <p class="pix-modal-note">Escaneie o QR Code no app do seu banco, ou copie a chave acima e cole na opção "Pix Copia e Cola". Depois de pagar, clique em "Presentear este item" na lista para reservar o presente.</p>
+  </div>
+</div>
 
 <footer>feita com carinho para a nossa casa nova</footer>
 
@@ -522,17 +701,21 @@
   function renderGrid(){
     grid.innerHTML = '';
     if (itemsCache.length === 0){
-      itemCount.textContent = '0 itens disponíveis';
-      grid.innerHTML = '<div class="empty-state">Todos os itens já foram presenteados. Obrigado! 💛</div>';
+      itemCount.textContent = 'nenhum item cadastrado';
+      grid.innerHTML = '<div class="empty-state">Nenhum item na lista ainda.</div>';
       return;
     }
-    itemCount.textContent = itemsCache.length + ' ' + (itemsCache.length === 1 ? 'item disponível' : 'itens disponíveis');
+    const disponiveis = itemsCache.filter(i => !i.Reservado).length;
+    const reservados = itemsCache.length - disponiveis;
+    itemCount.textContent =
+      disponiveis + (disponiveis === 1 ? ' item disponível' : ' itens disponíveis') +
+      (reservados > 0 ? ' · ' + reservados + (reservados === 1 ? ' já reservado' : ' já reservados') : '');
     itemsCache.forEach(item => grid.appendChild(criarCard(item)));
   }
 
   function criarCard(item){
     const card = document.createElement('div');
-    card.className = 'card';
+    card.className = 'card' + (item.Reservado ? ' reservado' : '');
     card.dataset.id = item.ID;
 
     card.innerHTML = `
@@ -542,62 +725,210 @@
       <p class="desc">${item.Descricao || ''}</p>
       <div class="row">
         ${item.Preco ? `<span class="price">${item.Preco}</span>` : '<span></span>'}
-        ${item.LinkLoja ? `<a class="store-link" href="${item.LinkLoja}" target="_blank" rel="noopener">ver na loja ↗</a>` : ''}
+        <div class="row-links">
+          ${item.LinkLoja ? `<a class="store-link" href="${item.LinkLoja}" target="_blank" rel="noopener">ver na loja ↗</a>` : ''}
+          ${pixConfigurado ? `<button type="button" class="pix-link">fazer pix</button>` : ''}
+        </div>
       </div>
-      <button class="gift-btn">Presentear este item</button>
-      <div class="stamp"><span>reservado ✓</span></div>
+      <button class="gift-btn">${item.Reservado ? 'Já reservado' : 'Presentear este item'}</button>
+      <div class="stamp"><span>item reservado!</span></div>
     `;
 
-    card.querySelector('.gift-btn').addEventListener('click', () => reservarItem(item, card));
+    const giftBtn = card.querySelector('.gift-btn');
+    if (item.Reservado) giftBtn.disabled = true;
+    giftBtn.addEventListener('click', () => onClickPresentear(item, card));
+
+    const pixBtn = card.querySelector('.pix-link');
+    if (pixBtn) pixBtn.addEventListener('click', () => onClickFazerPix(item, card));
+
     return card;
   }
 
   // ============================================================
   // RESERVAR ITEM
   // ============================================================
-  async function reservarItem(item, card){
+
+  // Chama a API para marcar o item como reservado. Retorna { ok, erro }.
+  async function reservarViaAPI(item){
+    const res = await fetch(SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // evita preflight CORS no Apps Script
+      body: JSON.stringify({
+        action: 'reservar',
+        id: item.ID,
+        nome: currentUser.name,
+        email: currentUser.email
+      })
+    });
+    return await res.json();
+  }
+
+  // Deixa o card visualmente marcado como reservado (sem remover da lista).
+  function aplicarVisualReservado(card, animar){
+    const marcar = () => card.classList.add('reservado');
+    if (animar){
+      card.classList.add('stamping');
+      setTimeout(() => { card.classList.remove('stamping'); marcar(); }, 550);
+    } else {
+      marcar();
+    }
+    const btn = card.querySelector('.gift-btn');
+    btn.disabled = true;
+    btn.textContent = 'Já reservado';
+  }
+
+  // Clique em "Presentear este item"
+  async function onClickPresentear(item, card){
     if (!currentUser){
       showBanner('Entre com seu nome/e-mail (ou com o Google) antes de reservar um item.');
       window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
+    if (card.classList.contains('reservado')) return;
+
     const btn = card.querySelector('.gift-btn');
     btn.disabled = true;
     btn.textContent = 'Reservando…';
 
     try{
-      const res = await fetch(SCRIPT_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // evita preflight CORS no Apps Script
-        body: JSON.stringify({
-          action: 'reservar',
-          id: item.ID,
-          nome: currentUser.name,
-          email: currentUser.email
-        })
-      });
-      const data = await res.json();
+      const data = await reservarViaAPI(item);
       if (!data.ok){
-        alert(data.erro || 'Não foi possível reservar este item. Talvez alguém tenha acabado de escolhê-lo — atualize a lista.');
+        alert(data.erro || 'Não foi possível reservar este item. Talvez alguém tenha acabado de escolhê-lo — atualizando a lista.');
         btn.disabled = false;
         btn.textContent = 'Presentear este item';
+        carregarItens();
         return;
       }
-      card.classList.add('stamping');
-      setTimeout(() => {
-        card.classList.remove('stamping');
-        card.classList.add('removing');
-        setTimeout(() => {
-          itemsCache = itemsCache.filter(i => i.ID !== item.ID);
-          renderGrid();
-        }, 350);
-      }, 750);
+      aplicarVisualReservado(card, true);
     } catch(err){
       alert('Erro de conexão ao reservar. Tente novamente.');
       btn.disabled = false;
       btn.textContent = 'Presentear este item';
     }
   }
+
+  // Clique em "fazer pix" — reserva o item automaticamente (mesmo sem confirmar
+  // o pagamento) e em seguida abre o QR Code.
+  async function onClickFazerPix(item, card){
+    if (!currentUser){
+      showBanner('Entre com seu nome/e-mail (ou com o Google) antes de reservar um item.');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    if (!card.classList.contains('reservado')){
+      const pixBtn = card.querySelector('.pix-link');
+      const textoOriginal = pixBtn.textContent;
+      pixBtn.disabled = true;
+      pixBtn.textContent = 'reservando…';
+
+      try{
+        const data = await reservarViaAPI(item);
+        pixBtn.disabled = false;
+        pixBtn.textContent = textoOriginal;
+        if (!data.ok){
+          alert(data.erro || 'Não foi possível reservar este item. Talvez alguém tenha acabado de escolhê-lo — atualizando a lista.');
+          carregarItens();
+          return;
+        }
+        aplicarVisualReservado(card, true);
+      } catch(err){
+        pixBtn.disabled = false;
+        pixBtn.textContent = textoOriginal;
+        alert('Erro de conexão ao reservar. Tente novamente.');
+        return;
+      }
+    }
+
+    abrirModalPix(item);
+  }
+
+  // ============================================================
+  // PIX — geração do código "copia e cola" e do QR Code
+  // ============================================================
+  const pixConfigurado = PIX_KEY && !PIX_KEY.startsWith('COLE_AQUI');
+
+  function limparPreco(precoTexto){
+    if (!precoTexto) return null;
+    let t = String(precoTexto).replace(/[^\d.,]/g, '').trim();
+    if (t.indexOf(',') > -1){
+      t = t.replace(/\./g, '').replace(',', '.');
+    }
+    const valor = parseFloat(t);
+    return isNaN(valor) ? null : valor;
+  }
+
+  function normalizarTexto(str, maxLen){
+    const semAcento = (str || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    return semAcento.toUpperCase().substring(0, maxLen);
+  }
+
+  function campoEmv(id, valor){
+    const tamanho = String(valor.length).padStart(2, '0');
+    return id + tamanho + valor;
+  }
+
+  function crc16Pix(payload){
+    let resultado = 0xFFFF;
+    for (let i = 0; i < payload.length; i++){
+      resultado ^= (payload.charCodeAt(i) << 8);
+      for (let j = 0; j < 8; j++){
+        resultado = (resultado & 0x8000) ? ((resultado << 1) ^ 0x1021) : (resultado << 1);
+        resultado &= 0xFFFF;
+      }
+    }
+    return resultado.toString(16).toUpperCase().padStart(4, '0');
+  }
+
+  function montarPayloadPix(chave, nome, cidade, valor){
+    const nomeF = normalizarTexto(nome, 25) || 'RECEBEDOR';
+    const cidadeF = normalizarTexto(cidade, 15) || 'BRASIL';
+    const infoConta = campoEmv('00', 'br.gov.bcb.pix') + campoEmv('01', chave);
+
+    let payload =
+      campoEmv('00', '01') +
+      campoEmv('01', '11') +
+      campoEmv('26', infoConta) +
+      campoEmv('52', '0000') +
+      campoEmv('53', '986') +
+      (valor ? campoEmv('54', valor.toFixed(2)) : '') +
+      campoEmv('58', 'BR') +
+      campoEmv('59', nomeF) +
+      campoEmv('60', cidadeF) +
+      campoEmv('62', campoEmv('05', '***'));
+
+    payload += '6304';
+    return payload + crc16Pix(payload);
+  }
+
+  function abrirModalPix(item){
+    const valor = limparPreco(item.Preco);
+    const payload = montarPayloadPix(PIX_KEY, PIX_NOME, PIX_CIDADE, valor);
+    const qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=' + encodeURIComponent(payload);
+
+    document.getElementById('pixModalItem').textContent =
+      item.Nome + (valor ? ' — R$ ' + valor.toFixed(2).replace('.', ',') : '');
+    document.getElementById('pixModalQr').src = qrUrl;
+    document.getElementById('pixModalKey').textContent = PIX_KEY;
+    document.getElementById('pixModalOverlay').classList.add('visible');
+  }
+
+  function fecharModalPix(){
+    document.getElementById('pixModalOverlay').classList.remove('visible');
+  }
+
+  document.getElementById('pixModalClose').addEventListener('click', fecharModalPix);
+  document.getElementById('pixModalOverlay').addEventListener('click', (e) => {
+    if (e.target.id === 'pixModalOverlay') fecharModalPix();
+  });
+  document.getElementById('pixModalCopy').addEventListener('click', () => {
+    navigator.clipboard.writeText(PIX_KEY).then(() => {
+      const btn = document.getElementById('pixModalCopy');
+      const original = btn.textContent;
+      btn.textContent = 'copiado!';
+      setTimeout(() => { btn.textContent = original; }, 1500);
+    });
+  });
 
   document.getElementById('refreshBtn').addEventListener('click', carregarItens);
 
