@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Nossa Casa Nova — Lista de Presentes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<style>
+  /* ============================================================
+     CONFIGURAÇÃO — edite estas duas linhas
+     ============================================================ */
+</style>
+</head>
+<body>
+
+<script>
+  // ============================================================
+  // CONFIGURAÇÃO — edite estas duas constantes antes de publicar
+  // ============================================================
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzr304PoZCVbhicDGSlwI4zd5EPZhB27oGQDmyswp965tZXlbN54_s8I7OXIq_R2w77/exec'; // ex: https://script.google.com/macros/s/AKfycb.../exec
+  const GOOGLE_CLIENT_ID = 'COLE_AQUI_SEU_CLIENT_ID.apps.googleusercontent.com';
+</script>
+
+<style>
+  :root{
+    --paper: #EFE8D8;
+    --paper-2: #E6DCC3;
+    --card: #F7F2E6;
+    --ink: #26231D;
+    --ink-soft: #55503F;
+    --pine: #2F4A3E;
+    --pine-dark: #1E322A;
+    --ochre: #B8842A;
+    --rose: #A8455C;
+    --line: rgba(38,35,29,0.16);
+    --font-display: 'Fraunces', serif;
+    --font-body: 'Work Sans', sans-serif;
+    --font-mono: 'IBM Plex Mono', monospace;
+    --radius: 14px;
+  }
+
+  *{ box-sizing: border-box; }
+
+  body{
+    margin:0;
+    background:
+      radial-gradient(1200px 600px at 10% -10%, var(--paper-2), transparent 60%),
+      var(--paper);
+    color: var(--ink);
+    font-family: var(--font-body);
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+
+  a{ color: inherit; }
+
+  /* ---------- header ---------- */
+  header.hero{
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 56px 24px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 24px;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .hero-text .eyebrow{
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--pine);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+
+  .eyebrow svg{ width: 16px; height: 16px; }
+
+  h1{
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(34px, 5vw, 54px);
+    line-height: 1.02;
+    margin: 0 0 10px;
+    letter-spacing: -0.01em;
+  }
+
+  .hero-text p{
+    max-width: 46ch;
+    color: var(--ink-soft);
+    font-size: 15.5px;
+    margin: 0;
+  }
+
+  /* ---------- auth area ---------- */
+  .auth-box{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+    min-width: 220px;
+  }
+
+  .user-chip{
+    display: none;
+    align-items: center;
+    gap: 10px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 6px 14px 6px 6px;
+    font-size: 14px;
+  }
+
+  .user-chip img{
+    width: 28px; height: 28px; border-radius: 50%;
+  }
+
+  .user-chip.visible{ display: flex; }
+
+  .manual-login{
+    display: none;
+    flex-direction: column;
+    gap: 8px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 14px;
+    width: 260px;
+  }
+
+  .manual-login.visible{ display: flex; }
+
+  .manual-login small{ color: var(--ink-soft); font-size: 12px; }
+
+  .manual-login input{
+    font-family: var(--font-body);
+    padding: 9px 10px;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+    background: #fff;
+    font-size: 14px;
+  }
+
+  .manual-login button{
+    background: var(--pine);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 9px 12px;
+    font-weight: 500;
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+  .manual-login button:hover{ background: var(--pine-dark); }
+
+  /* ---------- status banner ---------- */
+  .banner{
+    max-width: 1120px;
+    margin: 20px auto 0;
+    padding: 0 24px;
+  }
+
+  .banner .msg{
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    background: #fff8e3;
+    border: 1px solid #e6d18f;
+    color: #6b5514;
+    border-radius: 10px;
+    padding: 10px 14px;
+  }
+
+  /* ---------- grid ---------- */
+  main{
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 36px 24px 100px;
+  }
+
+  .toolbar{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 22px;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .toolbar .count{
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    letter-spacing: 0.04em;
+  }
+
+  .refresh-btn{
+    font-family: var(--font-mono);
+    font-size: 12px;
+    background: transparent;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 7px 14px;
+    cursor: pointer;
+    color: var(--ink);
+    display: flex; align-items:center; gap:6px;
+  }
+
+  .refresh-btn:hover{ border-color: var(--pine); color: var(--pine); }
+
+  .grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+  }
+
+  .empty-state{
+    font-family: var(--font-display);
+    font-size: 22px;
+    color: var(--ink-soft);
+    text-align: center;
+    padding: 80px 20px;
+    border: 1px dashed var(--line);
+    border-radius: var(--radius);
+  }
+
+  /* ---------- card (tag style) ---------- */
+  .card{
+    position: relative;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 18px 18px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: transform .35s ease, opacity .35s ease;
+  }
+
+  .card::before{
+    content: "";
+    position: absolute;
+    top: 14px; left: 14px;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    border: 1.5px solid var(--line);
+    background: var(--paper);
+  }
+
+  .card.removing{
+    transform: scale(0.96);
+    opacity: 0;
+  }
+
+  .card-cat{
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ochre);
+    margin-left: 22px;
+  }
+
+  .card img.thumb{
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 8px;
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+  }
+
+  .card h3{
+    font-family: var(--font-display);
+    font-size: 19px;
+    font-weight: 600;
+    margin: 2px 0 0;
+  }
+
+  .card p.desc{
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    margin: 0;
+    flex-grow: 1;
+  }
+
+  .card .row{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-top: 4px;
+  }
+
+  .price{
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--ink);
+  }
+
+  .store-link{
+    font-size: 12.5px;
+    color: var(--pine);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .gift-btn{
+    margin-top: 6px;
+    width: 100%;
+    background: var(--pine);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-family: var(--font-body);
+    font-weight: 500;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background .2s ease;
+  }
+
+  .gift-btn:hover{ background: var(--pine-dark); }
+  .gift-btn:disabled{ opacity: .6; cursor: wait; }
+
+  .gift-btn:focus-visible, .refresh-btn:focus-visible, button:focus-visible, input:focus-visible{
+    outline: 2px solid var(--pine);
+    outline-offset: 2px;
+  }
+
+  /* ---------- stamp ---------- */
+  .stamp{
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(247,242,230,0.55);
+    border-radius: var(--radius);
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .card.stamping .stamp{
+    opacity: 1;
+    transition: opacity .15s ease;
+  }
+
+  .stamp span{
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: 15px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--rose);
+    border: 2.5px solid var(--rose);
+    border-radius: 6px;
+    padding: 6px 14px;
+    transform: rotate(-8deg) scale(0.85);
+    opacity: 0;
+  }
+
+  .card.stamping .stamp span{
+    animation: stampIn .5s ease forwards;
+  }
+
+  @keyframes stampIn{
+    0%{ transform: rotate(-8deg) scale(1.6); opacity: 0; }
+    60%{ opacity: 1; }
+    100%{ transform: rotate(-8deg) scale(1); opacity: 1; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .card, .stamp, .stamp span{ transition: none !important; animation: none !important; }
+  }
+
+  footer{
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    color: var(--ink-soft);
+    padding: 30px 24px 50px;
+  }
+</style>
+
+<header class="hero">
+  <div class="hero-text">
+    <div class="eyebrow">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 3 9v13h6v-7h6v7h6V9z"/></svg>
+      lista de casa nova
+    </div>
+    <h1>Nossa Casa Nova</h1>
+    <p>Escolha algo da lista abaixo para nos presentear. Assim que você reserva um item, ele sai da lista na hora — ninguém mais poderá escolher o mesmo.</p>
+  </div>
+
+  <div class="auth-box">
+    <div id="g_id_signin"></div>
+    <div class="user-chip" id="userChip">
+      <img id="userPhoto" src="" alt="">
+      <span id="userName"></span>
+    </div>
+    <div class="manual-login" id="manualLogin">
+      <small>Entre com seu nome e e-mail para reservar itens:</small>
+      <input type="text" id="manualName" placeholder="Seu nome" />
+      <input type="email" id="manualEmail" placeholder="Seu e-mail" />
+      <button id="manualLoginBtn">Entrar</button>
+    </div>
+  </div>
+</header>
+
+<div class="banner" id="banner" style="display:none">
+  <div class="msg" id="bannerMsg"></div>
+</div>
+
+<main>
+  <div class="toolbar">
+    <span class="count" id="itemCount">carregando itens…</span>
+    <button class="refresh-btn" id="refreshBtn">↻ atualizar lista</button>
+  </div>
+  <div class="grid" id="grid"></div>
+</main>
+
+<footer>feita com carinho para a nossa casa nova</footer>
+
+<script>
+  // ============================================================
+  // ESTADO
+  // ============================================================
+  let currentUser = null; // { name, email, picture }
+  let itemsCache = [];
+
+  const grid = document.getElementById('grid');
+  const itemCount = document.getElementById('itemCount');
+  const banner = document.getElementById('banner');
+  const bannerMsg = document.getElementById('bannerMsg');
+
+  function showBanner(text){
+    bannerMsg.textContent = text;
+    banner.style.display = 'block';
+  }
+
+  // ============================================================
+  // LOGIN COM GOOGLE
+  // ============================================================
+  function parseJwt(token){
+    const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+    return JSON.parse(decodeURIComponent(atob(base64).split('').map(c =>
+      '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+    ).join('')));
+  }
+
+  function handleCredentialResponse(response){
+    const payload = parseJwt(response.credential);
+    setUser({ name: payload.name, email: payload.email, picture: payload.picture });
+  }
+
+  function setUser(user){
+    currentUser = user;
+    const chip = document.getElementById('userChip');
+    document.getElementById('userPhoto').src = user.picture || '';
+    document.getElementById('userName').textContent = user.name;
+    chip.classList.add('visible');
+    document.getElementById('g_id_signin').style.display = 'none';
+    document.getElementById('manualLogin').classList.remove('visible');
+  }
+
+  const clientIdConfigured = GOOGLE_CLIENT_ID && !GOOGLE_CLIENT_ID.startsWith('COLE_AQUI');
+
+  window.addEventListener('load', () => {
+    if (clientIdConfigured && window.google && window.google.accounts){
+      google.accounts.id.initialize({
+        client_id: GOOGLE_CLIENT_ID,
+        callback: handleCredentialResponse
+      });
+      google.accounts.id.renderButton(
+        document.getElementById('g_id_signin'),
+        { theme: 'outline', size: 'medium', shape: 'pill' }
+      );
+    } else {
+      // sem client id configurado (ou falha ao carregar) -> login manual
+      document.getElementById('g_id_signin').style.display = 'none';
+      document.getElementById('manualLogin').classList.add('visible');
+      if (!clientIdConfigured){
+        showBanner('Login com Google não configurado ainda — usando entrada manual de nome/e-mail. Veja o guia de configuração para ativar o login com Google.');
+      }
+    }
+  });
+
+  document.getElementById('manualLoginBtn').addEventListener('click', () => {
+    const name = document.getElementById('manualName').value.trim();
+    const email = document.getElementById('manualEmail').value.trim();
+    if (!name || !email){ alert('Preencha nome e e-mail.'); return; }
+    setUser({ name, email, picture: '' });
+  });
+
+  // ============================================================
+  // CARREGAR ITENS
+  // ============================================================
+  async function carregarItens(){
+    itemCount.textContent = 'carregando itens…';
+    try{
+      const res = await fetch(SCRIPT_URL, { method: 'GET' });
+      const data = await res.json();
+      if (!data.ok) throw new Error(data.erro || 'erro ao carregar');
+      itemsCache = data.itens || [];
+      renderGrid();
+    } catch(err){
+      itemCount.textContent = '';
+      grid.innerHTML = '<div class="empty-state">Não consegui carregar a lista. Confira se a URL do Apps Script está configurada corretamente.</div>';
+    }
+  }
+
+  function renderGrid(){
+    grid.innerHTML = '';
+    if (itemsCache.length === 0){
+      itemCount.textContent = '0 itens disponíveis';
+      grid.innerHTML = '<div class="empty-state">Todos os itens já foram presenteados. Obrigado! 💛</div>';
+      return;
+    }
+    itemCount.textContent = itemsCache.length + ' ' + (itemsCache.length === 1 ? 'item disponível' : 'itens disponíveis');
+    itemsCache.forEach(item => grid.appendChild(criarCard(item)));
+  }
+
+  function criarCard(item){
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.dataset.id = item.ID;
+
+    card.innerHTML = `
+      ${item.Categoria ? `<div class="card-cat">${item.Categoria}</div>` : ''}
+      ${item.Foto ? `<img class="thumb" src="${item.Foto}" alt="${item.Nome}">` : ''}
+      <h3>${item.Nome}</h3>
+      <p class="desc">${item.Descricao || ''}</p>
+      <div class="row">
+        ${item.Preco ? `<span class="price">${item.Preco}</span>` : '<span></span>'}
+        ${item.LinkLoja ? `<a class="store-link" href="${item.LinkLoja}" target="_blank" rel="noopener">ver na loja ↗</a>` : ''}
+      </div>
+      <button class="gift-btn">Presentear este item</button>
+      <div class="stamp"><span>reservado ✓</span></div>
+    `;
+
+    card.querySelector('.gift-btn').addEventListener('click', () => reservarItem(item, card));
+    return card;
+  }
+
+  // ============================================================
+  // RESERVAR ITEM
+  // ============================================================
+  async function reservarItem(item, card){
+    if (!currentUser){
+      showBanner('Entre com seu nome/e-mail (ou com o Google) antes de reservar um item.');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+    const btn = card.querySelector('.gift-btn');
+    btn.disabled = true;
+    btn.textContent = 'Reservando…';
+
+    try{
+      const res = await fetch(SCRIPT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // evita preflight CORS no Apps Script
+        body: JSON.stringify({
+          action: 'reservar',
+          id: item.ID,
+          nome: currentUser.name,
+          email: currentUser.email
+        })
+      });
+      const data = await res.json();
+      if (!data.ok){
+        alert(data.erro || 'Não foi possível reservar este item. Talvez alguém tenha acabado de escolhê-lo — atualize a lista.');
+        btn.disabled = false;
+        btn.textContent = 'Presentear este item';
+        return;
+      }
+      card.classList.add('stamping');
+      setTimeout(() => {
+        card.classList.remove('stamping');
+        card.classList.add('removing');
+        setTimeout(() => {
+          itemsCache = itemsCache.filter(i => i.ID !== item.ID);
+          renderGrid();
+        }, 350);
+      }, 750);
+    } catch(err){
+      alert('Erro de conexão ao reservar. Tente novamente.');
+      btn.disabled = false;
+      btn.textContent = 'Presentear este item';
+    }
+  }
+
+  document.getElementById('refreshBtn').addEventListener('click', carregarItens);
+
+  // atualiza a lista sozinha a cada 45s, para refletir reservas de outras pessoas
+  setInterval(carregarItens, 45000);
+
+  carregarItens();
+</script>
+
+</body>
+</html>
