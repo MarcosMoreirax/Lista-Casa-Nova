@@ -783,7 +783,7 @@
     card.dataset.id = item.ID;
 
     card.innerHTML = `
-      ${(item.Tipo || item.Categoria) ? `<div class="card-cat">${[item.Tipo, item.Categoria].filter(Boolean).join(' - ')}</div>` : ''}
+      ${(item.Tipo || item.Categoria) ? `<div class="card-cat">${[item.Categoria, item.Tipo].filter(Boolean).join(' - ')}</div>` : ''}
       ${item.Foto ? `<img class="thumb" src="${item.Foto}" alt="${item.Nome}">` : ''}
       <h3>${item.Nome}</h3>
       <p class="desc">${item.Descricao || ''}</p>
